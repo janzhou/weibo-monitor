@@ -1,0 +1,63 @@
+#!/usr/bin/env node
+// Author: Jian Zhou
+// Home  : http://janzhou.org
+
+
+var http    = require('http');
+var url     = require('url');
+var request = require('request');
+var fs      = require('fs');
+
+function Auth (app_key, app_secret, http_host, http_port) {
+    this.version            = 0.1
+    this.app_key            = app_key;
+    this.app_secret         = app_secret;
+    this.call_back_url      = 'http://'+http_host+':'+http_port+'/callback';
+
+    this.access_token_url   = "https://api.weibo.com/oauth2/access_token";
+    this.authorize_url      = "https://api.weibo.com/oauth2/authorize";
+
+    this.authorize = function () {
+        console.log(this.authorize_url + 
+                "?client_id=" + this.app_key +
+                "&redirect_uri=" + this.call_back_url
+                );
+    };
+
+    //获取accesstoken的时候老是出现“miss client id or secret”错误。
+    //原因：该方法说是只能通过post请求传递，但是参数又必须放到url里面，是get/post混搭使用的，实际上post的内容为空，参数都是拼在url中。
+    this.authorization_token = function (authorization_code) {
+        var auth=this;
+        request.post(this.access_token_url+
+            '?client_id=' + this.app_key +
+            '&client_secret=' + this.app_secret +
+            '&grant_type=' + 'authorization_code' +
+            '&code=' + authorization_code +
+            '&redirect_uri=' + this.call_back_url,
+            {}, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                fs.writeFile('auth.conf', body, function(err){
+                    if (err) throw err;
+                    console.log('auth.conf saved!');
+                    auth.http_server.close();
+                })
+            } else {
+                console.log(response);
+            }
+        });
+    };
+
+    this.http_server = http.createServer(function (request, response) {
+        authorization_code = url.parse(request.url, true).query.code;
+        this.weibo.authorization_token(authorization_code);
+        response.write(authorization_code);
+        response.end();
+        request.connection.destroy();
+    });
+
+    this.http_server.weibo = this;
+    this.http_server.listen(http_port);
+}
+
+auth = new Auth('208143261', '7cf1ba728ea5db374f4ec99bed04e719', '127.0.0.1', 8456);
+auth.authorize();
