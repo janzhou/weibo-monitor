@@ -1,7 +1,5 @@
-#!/usr/bin/env node
 // Author: Jian Zhou
 // Home  : http://janzhou.org
-
 
 var http    = require('http');
 var url     = require('url');
@@ -59,5 +57,6 @@ function Auth (app_key, app_secret, http_host, http_port) {
     this.http_server.listen(http_port);
 }
 
-auth = new Auth('208143261', '7cf1ba728ea5db374f4ec99bed04e719', '127.0.0.1', 8456);
-auth.authorize();
+exports.init = function (app_key, app_secret, http_host, http_port) {
+    return new Auth (app_key, app_secret, http_host, http_port);
+}
