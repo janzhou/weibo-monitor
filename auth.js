@@ -57,6 +57,8 @@ function Auth (app_key, app_secret, http_host, http_port) {
     this.http_server.listen(http_port);
 }
 
-exports.init = function (app_key, app_secret, http_host, http_port) {
-    return new Auth (app_key, app_secret, http_host, http_port);
+exports.init = function (app_key, app_secret, http_host, http_port, events) {
+    auth = new Auth (app_key, app_secret, http_host, http_port);
+    events.on('auth-start', function () {auth.authorize()});
+    return auth;
 }
