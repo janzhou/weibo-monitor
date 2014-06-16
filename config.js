@@ -5,7 +5,7 @@ function config (file, events) {
 
     this.set = function (conf, data) {
         eval('config.' + conf +' = data');
-        fs.writeFile(file, JSON.stringify(config), function(err){
+        fs.writeFile(file, JSON.stringify(config, null, "\t"), function(err){
             if (err) throw err;
         });
     }
