@@ -6,5 +6,5 @@ var auth    = require('./auth.js').init(config, events);
 var api     = require('./api.js')
 
 events.emit('auth-start');
-//api.status('home_timeline', config);
-api.update('test', config);
+api.loadDict(config);
+api.status('home_timeline', config);
