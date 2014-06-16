@@ -6,12 +6,14 @@ var url     = require('url');
 var request = require('request');
 var fs      = require('fs');
 
-function Auth (app_key, app_secret, http_host, http_port) {
+function Auth (config) {
     this.version            = 0.1
-    this.app_key            = app_key;
-    this.app_secret         = app_secret;
-    this.call_back_url      = 'http://'+http_host+':'+http_port+'/callback';
+    this.app_key            = config.get('app_key');
+    this.app_secret         = config.get('app_secret');
+    this.http_host          = config.get('http_host');
+    this.http_port          = config.get('http_port');
 
+    this.call_back_url      = 'http://'+this.http_host+':'+this.http_port+'/callback';
     this.access_token_url   = "https://api.weibo.com/oauth2/access_token";
     this.authorize_url      = "https://api.weibo.com/oauth2/authorize";
 
@@ -34,11 +36,9 @@ function Auth (app_key, app_secret, http_host, http_port) {
             '&redirect_uri=' + this.call_back_url,
             {}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                fs.writeFile('auth.conf', body, function(err){
-                    if (err) throw err;
-                    console.log('auth.conf saved!');
-                    auth.http_server.close();
-                })
+                eval('var token = ' + body);
+                config.set('access_token', token);
+                auth.http_server.close();
             } else {
                 console.log(response);
             }
@@ -54,11 +54,11 @@ function Auth (app_key, app_secret, http_host, http_port) {
     });
 
     this.http_server.weibo = this;
-    this.http_server.listen(http_port);
+    this.http_server.listen(this.http_port);
 }
 
-exports.init = function (app_key, app_secret, http_host, http_port, events) {
-    auth = new Auth (app_key, app_secret, http_host, http_port);
+exports.init = function (config, events) {
+    auth = new Auth (config);
     events.on('auth-start', function () {auth.authorize()});
     return auth;
 }
