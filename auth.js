@@ -13,7 +13,11 @@ function Auth (config) {
     this.http_host          = config.get('http_host');
     this.http_port          = config.get('http_port');
 
-    this.call_back_url      = 'http://'+this.http_host+':'+this.http_port+'/callback';
+    if( this.http_port == '80' ) {
+        this.call_back_url  = 'http://'+this.http_host+'/callback';
+    } else {
+        this.call_back_url  = 'http://'+this.http_host+':'+this.http_port+'/callback';
+    };
     this.access_token_url   = "https://api.weibo.com/oauth2/access_token";
     this.authorize_url      = "https://api.weibo.com/oauth2/authorize";
 
