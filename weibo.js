@@ -3,7 +3,7 @@ var http            = require('./http.js').createServer(config.get('http'));
 var auth            = require('./auth.js').createAuth(config.get('app'));
 var api             = require('./api.js')
 
-api.loadDict(config);
+api.loadDict(config.get('dict_dir'));
 http.on('callback', auth.callback);
 auth.on('config', config.set);
 console.log(auth.authorize_url);
