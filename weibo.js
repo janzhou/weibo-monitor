@@ -1,10 +1,14 @@
-var EventEmitter = require('events').EventEmitter;
-var events = new EventEmitter(); 
+var EventEmitter    = require('events').EventEmitter;
+var events          = new EventEmitter(); 
+var config          = require('./config.js').loadConfig('./config.json', events);
 
-var config  = require('./config.js').loadConfig('./config.json', events);
-var auth    = require('./auth.js').init(config, events);
-var api     = require('./api.js')
+var http            = require('./http.js').createServer(config.get('http'));
+var auth            = require('./auth.js').createAuth(config.get('app'));
 
-events.emit('auth-start');
+http.on('callback', auth.callback);
+auth.on('config', config.set);
+
+var api             = require('./api.js')
+
 api.loadDict(config);
-api.status('home_timeline', config);
+console.log(auth.authorize_url);
