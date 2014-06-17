@@ -1,6 +1,6 @@
 var fs  = require('fs');
 
-function config (file, events) {
+function config (file) {
     var config = require(file);
 
     function getDateTime() {
@@ -48,8 +48,8 @@ function config (file, events) {
     }
 }
 
-exports.loadConfig = function (file, events) {
-    conf = new config(file, events);
+exports.loadConfig = function (file) {
+    conf = new config(file);
     return conf;
 }
 
