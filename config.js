@@ -27,9 +27,11 @@ function config (file) {
     }
 
     function save () {
-        fs.rename(file, file + '_' + getDateTime());
-        fs.writeFile(file, JSON.stringify(config, null, "\t"), function(err){
+        fs.rename(file, file + '_' + getDateTime(), function(err){
             if (err) throw err;
+            fs.writeFile(file, JSON.stringify(config, null, "\t"), function(err){
+                if (err) throw err;
+            });
         });
     }
 
