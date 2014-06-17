@@ -26,8 +26,7 @@ auth = function (app) {
             '&redirect_uri=' + app.callback_url,
             {}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                eval('var token = ' + body);
-                auth.emit('config', 'auth', token);
+                auth.emit('config', 'auth', JSON.parse(body));
             } else {
                 console.log(response);
             }
