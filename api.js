@@ -4,17 +4,14 @@ var segment = require("nodejieba");
 
 var baseurl = 'https://api.weibo.com/2/';
 
-exports.status = function (status, auth) {
+exports.status = function (status, auth, callback) {
     request(baseurl + 'statuses/' + status + '.json?access_token=' + auth.access_token,
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                    body = JSON.parse(body);
-                    body.statuses.forEach(function ( weibo, index ) {
-                        console.log(weibo.text);
-                        console.log(segment.cut(weibo.text));
-                    });
+                    callback(false, JSON.parse(body));
+                    
                 } else {
-                    console.log(response);
+                    callback(true, JSON.parse(body));
                 }
             });
 }
