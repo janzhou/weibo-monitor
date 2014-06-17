@@ -1,11 +1,12 @@
 var request = require('request');
 var urlencode = require('urlencode');
 var segment = require("nodejieba");
+var url     = require('url');
 
 var baseurl = 'https://api.weibo.com/2/';
 
-exports.status = function (status, auth, callback) {
-    request(baseurl + 'statuses/' + status + '.json?access_token=' + auth.access_token,
+exports.status = function (status, auth, param, callback) {
+    request(baseurl + 'statuses/' + status + '.json?access_token=' + auth.access_token + url.format(param),
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     callback(false, JSON.parse(body));
