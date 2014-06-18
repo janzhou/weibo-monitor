@@ -38,7 +38,6 @@ auth = function (app) {
         authorization_token(authorization_code);
         response.write(authorization_code);
         response.end();
-        request.connection.destroy();
     };
 
 };
