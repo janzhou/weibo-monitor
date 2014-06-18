@@ -6,7 +6,8 @@ var url     = require('url');
 var baseurl = 'https://api.weibo.com/2/';
 
 exports.status = function (status, auth, param, callback) {
-    request(baseurl + 'statuses/' + status + '.json?access_token=' + auth.access_token + url.format(param),
+    param.access_token = auth.access_token;
+    request(baseurl + 'statuses/' + status + '.json' + url.format({'query':param}),
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     callback(false, JSON.parse(body));
