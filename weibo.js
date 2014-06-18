@@ -22,10 +22,7 @@ MongoClient.connect(config.get('mongodb'), function(err, mongo) {
 
     function timeline (param) {
         api.status('home_timeline', config.get('auth'), param, function (err, wbs) {
-            if(err) {
-                console.log(wbs);
-                throw err;
-            }
+            if(err) return timeline(param);
 
             var collection = db.collection('status');
             var cnt = 0;
