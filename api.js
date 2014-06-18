@@ -11,9 +11,8 @@ exports.status = function (status, auth, param, callback) {
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
                     callback(false, JSON.parse(body));
-                    
                 } else {
-                    callback(true, JSON.parse(body));
+                    callback(true, body);
                 }
             });
 }
