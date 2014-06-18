@@ -1,6 +1,6 @@
 var config          = require('./config.js').loadConfig('./config.json');
-var http            = require('./http.js').createServer(config.get('http'));
 var auth            = require('./auth.js').createAuth(config.get('app'));
+var http            = require('./http.js').createServer(config.get('http'), auth.authorize_url);
 var api             = require('./api.js');
 
 api.loadDict(config.get('dict_dir'));

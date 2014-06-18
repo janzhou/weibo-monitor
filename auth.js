@@ -36,7 +36,8 @@ auth = function (app) {
     this.callback = function (request, response) {
         authorization_code = url.parse(request.url, true).query.code;
         authorization_token(authorization_code);
-        response.write(authorization_code);
+        response.statusCode = 302;
+        response.setHeader("Location", "/");
         response.end();
     };
 

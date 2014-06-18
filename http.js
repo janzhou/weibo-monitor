@@ -4,7 +4,7 @@ var url     = require('url');
 var fs      = require('fs');
 var path    = require('path');
 
-function createServer(config) {
+function createServer(config, login_url) {
 
     http_server = http.createServer(function (request, response) {
         var request_url = url.parse(request.url, true);
@@ -39,6 +39,9 @@ function createServer(config) {
                         response.writeHead(404, {'content-type': content_type});
                         response.end('404');
                     } else {
+                        if(request_url.pathname == '/') {
+                            data = String(data).replace(/#login/g, login_url);
+                        }
                         response.writeHead(200, {'Content-Type': content_type});
                         response.end(data);
                     }
