@@ -9,9 +9,8 @@ auth.on('config', config.set);
 console.log(auth.authorize_url);
 
 var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect(config.get('mongodb'), function(err, mongo) {
+MongoClient.connect(config.get('mongodb'), function(err, db) {
     if(err) throw err;
-    var db = mongo;
 
     var since_id = 0;
     var new_since_id = 0;
