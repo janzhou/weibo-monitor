@@ -1,12 +1,11 @@
 var config          = require('./config.js').loadConfig('./config.json');
-var auth            = require('./auth.js').createAuth(config.get('app'));
-var http            = require('./http.js').createServer(config.get('http'), auth.authorize_url);
-var api             = require('./api.js');
+var api             = require('./api.js').createApi(config.get('app'));
+var http            = require('./http.js').createServer(config.get('http'), api.authorize_url);
 
 api.loadDict(config.get('dict_dir'));
-http.on('auth', auth.authorization_token);
-auth.on('config', config.set);
-console.log(auth.authorize_url);
+http.on('auth', api.auth);
+api.on('config', config.set);
+console.log(api.authorize_url);
 
 var MongoClient = require('mongodb').MongoClient;
 MongoClient.connect(config.get('mongodb'), function(err, db) {
