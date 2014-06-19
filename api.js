@@ -17,7 +17,7 @@ var api         = function (app) {
 
     //获取accesstoken的时候老是出现“miss client id or secret”错误。
     //原因：该方法说是只能通过post请求传递，但是参数又必须放到url里面，是get/post混搭使用的，实际上post的内容为空，参数都是拼在url中。
-    this.auth = function (authorization_code) {
+    this.auth = function (authorization_code, uuid) {
         request.post(access_token_url+
             '?client_id=' + app.key +
             '&client_secret=' + app.secret +
@@ -26,7 +26,9 @@ var api         = function (app) {
             '&redirect_uri=' + app.callback_url,
             {}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
-                self.emit('config', 'auth', JSON.parse(body));
+                var auth = JSON.parse(body);
+                auth.uuid = uuid;
+                self.emit('auth', auth);
             } else {
                 console.log(response);
             }

@@ -17,7 +17,8 @@ function createServer(config, login_url) {
         switch(request_url.pathname){
             case '/auth':
                 authorization_code = url.parse(request.url, true).query.code;
-                http_server.emit('auth', authorization_code);
+                uuid = url.parse(request.url, true).query.state;
+                http_server.emit('auth', authorization_code, uuid);
                 redirect(response, config.redirect_url);
                 break;
             case '/login':

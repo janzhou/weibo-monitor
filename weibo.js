@@ -4,13 +4,17 @@ var http            = require('./http.js').createServer(config.get('http'), api.
 
 api.loadDict(config.get('dict_dir'));
 http.on('auth', api.auth);
-api.on('config', config.set);
 console.log(api.authorize_url);
 
 var MongoClient = require('mongodb').MongoClient;
 MongoClient.connect(config.get('mongodb'), function(err, db) {
     if(err) throw err;
 
+    api.on('auth', function(auth){
+        db.collection('uuidAuth').insert(auth, function (err){
+            if(err) throw err;
+        });
+    });
     var since_id = 0;
     var new_since_id = 0;
     //var interval = 1000 * 3600 / 150;
