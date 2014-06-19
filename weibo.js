@@ -17,7 +17,7 @@ MongoClient.connect(config.mongodb, function(err, db) {
         });
     });
 
-    var http = require('./http.js').createServer(config.http, api.authorize_url);
+    var http = require('./http.js').createServer(api, config.http, db);
     http.on('auth', api.auth);
 
     var crawler = require('./crawler.js').createCrawler(api, config, db);
