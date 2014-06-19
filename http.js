@@ -13,17 +13,23 @@ function redirect(response, url) {
 function createServer(config, login_url) {
     http_server = http.createServer(function (request, response) {
         var request_url = url.parse(request.url, true);
-        console.log(request_url.pathname);
         switch(request_url.pathname){
             case '/auth':
                 authorization_code = url.parse(request.url, true).query.code;
-                uuid = url.parse(request.url, true).query.state;
-                http_server.emit('auth', authorization_code, uuid);
+                var id = url.parse(request.url, true).query.state;
+                http_server.emit('auth', authorization_code, id);
                 redirect(response, config.redirect_url);
                 break;
             case '/login':
-                response.setHeader("Content-Type", 'application/json');
-                response.end(JSON.stringify({"login_url":login_url, "state":uuid.v4()}));
+                var id = uuid.v4();
+                if(url.parse(request.url, true).query.callback) {
+                    response.setHeader("Content-Type", 'text/javascript');
+                    var data = url.parse(request.url, true).query.callback + "(" + JSON.stringify({"login_url":login_url, "state": id}) + ");";
+                } else {
+                    response.setHeader("Content-Type", 'text/plain');
+                    var data = login_url + "&state=" + id;
+                };
+                response.end(data);
                 break;
             default :
                 redirect(response, config.redirect_url);
