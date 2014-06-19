@@ -1,13 +1,13 @@
-var config          = require('./config.js').loadConfig('./config.json');
-var api             = require('./api.js').createApi(config.get('app'));
-var http            = require('./http.js').createServer(config.get('http'), api.authorize_url);
+var config          = require('./config.json');
+var api             = require('./api.js').createApi(config.app);
+var http            = require('./http.js').createServer(config.http, api.authorize_url);
 
-api.loadDict(config.get('dict_dir'));
+api.loadDict(config.dict_dir);
 http.on('auth', api.auth);
 console.log(api.authorize_url);
 
 var MongoClient = require('mongodb').MongoClient;
-MongoClient.connect(config.get('mongodb'), function(err, db) {
+MongoClient.connect(config.mongodb, function(err, db) {
     if(err) throw err;
 
     api.on('user', function(user){
@@ -23,12 +23,11 @@ MongoClient.connect(config.get('mongodb'), function(err, db) {
     var since_id = 0;
     var new_since_id = 0;
     //var interval = 1000 * 3600 / 150;
-    var crawler = config.get('crawler');
-    var interval = crawler.interval;
-    var count = crawler.count;
+    var interval    = config.crawler.interval;
+    var count       = config.crawler.count;
 
     function timeline (param) {
-        api.status('home_timeline', config.get('auth'), param, function (err, wbs) {
+        api.status('home_timeline', config.auth, param, function (err, wbs) {
             if(err) return timeline(param);
 
             var collection = db.collection('status');
