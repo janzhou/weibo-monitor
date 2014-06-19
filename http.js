@@ -14,7 +14,7 @@ function createServer(config, login_url) {
                 authorization_code = url.parse(request.url, true).query.code;
                 http_server.emit('auth', authorization_code);
                 response.statusCode = 302;
-                response.setHeader("Location", "/");
+                response.setHeader("Location", config.redirect_url);
                 response.end();
                 break;
             default :
