@@ -11,7 +11,11 @@ function createServer(config, login_url) {
         console.log(request_url.pathname);
         switch(request_url.pathname){
             case '/auth':
-                http_server.emit('auth', request, response);
+                authorization_code = url.parse(request.url, true).query.code;
+                http_server.emit('auth', authorization_code);
+                response.statusCode = 302;
+                response.setHeader("Location", "/");
+                response.end();
                 break;
             default :
                 var content_type;

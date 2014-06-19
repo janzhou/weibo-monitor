@@ -4,7 +4,7 @@ var http            = require('./http.js').createServer(config.get('http'), auth
 var api             = require('./api.js');
 
 api.loadDict(config.get('dict_dir'));
-http.on('auth', auth.callback);
+http.on('auth', auth.authorization_token);
 auth.on('config', config.set);
 console.log(auth.authorize_url);
 

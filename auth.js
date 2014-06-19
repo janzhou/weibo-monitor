@@ -1,7 +1,6 @@
 // Author: Jian Zhou
 // Home  : http://janzhou.org
 
-var url     = require('url');
 var request = require('request');
 var events = require('events');
 var util = require('util');
@@ -17,7 +16,7 @@ auth = function (app) {
 
     //获取accesstoken的时候老是出现“miss client id or secret”错误。
     //原因：该方法说是只能通过post请求传递，但是参数又必须放到url里面，是get/post混搭使用的，实际上post的内容为空，参数都是拼在url中。
-    function authorization_token (authorization_code) {
+    this.authorization_token = function (authorization_code) {
         request.post(access_token_url+
             '?client_id=' + app.key +
             '&client_secret=' + app.secret +
@@ -32,15 +31,6 @@ auth = function (app) {
             }
         });
     };
-
-    this.callback = function (request, response) {
-        authorization_code = url.parse(request.url, true).query.code;
-        authorization_token(authorization_code);
-        response.statusCode = 302;
-        response.setHeader("Location", "/");
-        response.end();
-    };
-
 };
 
 util.inherits(auth, events.EventEmitter);
