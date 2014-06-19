@@ -2,7 +2,7 @@ var http    = require('http');
 var util = require('util');
 var url     = require('url');
 var fs      = require('fs');
-var path    = require('path');
+var uuid = require('node-uuid');
 
 function redirect(response, url) {
                 response.statusCode = 302;
@@ -19,6 +19,10 @@ function createServer(config, login_url) {
                 authorization_code = url.parse(request.url, true).query.code;
                 http_server.emit('auth', authorization_code);
                 redirect(response, config.redirect_url);
+                break;
+            case '/login':
+                response.setHeader("Content-Type", 'application/json');
+                response.end(JSON.stringify({"login_url":login_url, "state":uuid.v4()}));
                 break;
             default :
                 redirect(response, config.redirect_url);
