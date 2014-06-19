@@ -27,10 +27,21 @@ var api         = function (app) {
             {}, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 var auth = JSON.parse(body);
-                auth.uuid = uuid;
-                self.emit('auth', auth);
+                var request_url  = baseurl + 'users/show.json' + url.format({'query':{'access_token':auth.access_token,'uid':auth.uid}});
+                request.get(request_url, function (error, response, body) {
+                        if (!error && response.statusCode == 200) {
+                            var user = JSON.parse(body);
+                            user.auth = auth;
+                            user.uuid = uuid;
+                            self.emit('user', user);
+                        } else {
+                            console.log(response);
+                            console.log('users/show.json error: ' + request_url);
+                        }
+                    });
             } else {
                 console.log(response);
+                console.log('auth code error');
             }
         });
     };

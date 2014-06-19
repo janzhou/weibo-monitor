@@ -10,9 +10,14 @@ var MongoClient = require('mongodb').MongoClient;
 MongoClient.connect(config.get('mongodb'), function(err, db) {
     if(err) throw err;
 
-    api.on('auth', function(auth){
-        db.collection('uuidAuth').insert(auth, function (err){
+    api.on('user', function(user){
+        db.collection('user').findAndModify({'uid':user.uid}, [['uid', 1]], {$set:user}, {new:true}, function(err, us) {
             if(err) throw err;
+            if( !us ) {
+                db.collection('user').insert(user, function (err){
+                    if(err) throw err;
+                });
+            }
         });
     });
     var since_id = 0;
