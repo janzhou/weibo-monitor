@@ -32,7 +32,7 @@ function createServer(api, config, db) {
                 };
                 response.end(data);
                 break;
-            case '/email':
+            case '/setting':
                 var id = url.parse(request.url, true).query.uuid;
                 var email = url.parse(request.url, true).query.email;
                 var callback = url.parse(request.url, true).query.callback;
@@ -48,16 +48,16 @@ function createServer(api, config, db) {
                             if(err) throw err;
                             if(user) {
                                 if( user.setting && 'email' in user.setting) {
-                                    var email = user.setting.email;
+                                    var data = user.setting;
                                 } else {
-                                    var email = 'place your email';
+                                    var data= {"email":'place your email'};
                                 }
                                 if(callback) {
                                     response.setHeader("Content-Type", 'text/javascript');
-                                    response.end(callback + '({"email":"'+email+'"});');
+                                    response.end(callback+"("+JSON.stringify(data)+");");
                                 } else {
                                     response.setHeader("Content-Type", 'text/plain');
-                                    response.end(JSON.stringify({'email': email}));
+                                    response.end(callback+"("+JSON.stringify(data)+");");
                                 };
                             } else {
                                 response.end(callback + '({"error":true});');
