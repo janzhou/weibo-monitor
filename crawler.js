@@ -1,8 +1,7 @@
 var crawler = function (api, config, db) {
     var since_id = 0;
     var new_since_id = 0;
-    //var interval = 1000 * 3600 / 150;
-    var interval    = config.crawler.interval;
+    var interval = 1000 * 3600 / config.crawler.limit;
     var count       = config.crawler.count;
 
     function timeline (param) {
@@ -27,8 +26,7 @@ var crawler = function (api, config, db) {
                 setTimeout(timeline, interval, {'since_id': wbs.since_id, 'count': count}); //本次读结束
                 console.log('第一次取，只取一次');
             } else if (since_id < wbs.max_id) { //上次取完成的点为 since_id，
-                //setTimeout(timeline, interval, {'max_id': wbs.max_id, 'count': count});
-                setTimeout(timeline, 1000, {'max_id': wbs.max_id, 'count': count});
+                setTimeout(timeline, interval, {'max_id': wbs.max_id, 'count': count});
                 console.log('上次取完的点为' + since_id);
                 console.log('这次取到的点为' + wbs.max_id);
             } else {
