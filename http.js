@@ -68,6 +68,10 @@ function createServer(api, config, db) {
                     response.end(JSON.stringify({"error":true}));
                 }
                 break;
+            case '/robots.txt':
+                response.setHeader("Content-Type", 'text/plain');
+                response.end('User-agent: *\nDisallow: /');
+                break;
             default :
                 redirect(response, config.redirect_url);
                 break;
