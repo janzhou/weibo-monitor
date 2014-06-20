@@ -46,21 +46,21 @@ var api         = function (app) {
         });
     };
 
-    this.status = function (status, auth, param, callback) {
-        param.access_token = auth.access_token;
+    this.status = function (status, access_token, param, callback) {
+        param.access_token = access_token;
         request(baseurl + 'statuses/' + status + '.json' + url.format({'query':param}),
                 function (error, response, body) {
                     if (!error && response.statusCode == 200) {
-                        callback(false, JSON.parse(body));
+                        callback(null, JSON.parse(body));
                     } else {
-                        callback(true, body);
+                        callback(body);
                     }
                 });
     }
 
-    this.update = function (content, auth) {
+    this.update = function (content, access_token) {
         var options = {
-            'url': baseurl + 'statuses/update.json?access_token=' + auth.access_token + '&status=' + urlencode(content),
+            'url': baseurl + 'statuses/update.json?access_token=' + access_token + '&status=' + urlencode(content),
             method: 'POST',
             headers: {
                 'Content-Length': urlencode(content).length,

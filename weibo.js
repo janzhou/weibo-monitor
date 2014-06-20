@@ -20,6 +20,6 @@ MongoClient.connect(config.mongodb, function(err, db) {
     var http = require('./http.js').createServer(api, config.http, db);
     http.on('auth', api.auth);
 
-    var crawler = require('./crawler.js').createCrawler(api, config, db);
+    var crawler = require('./crawler.js').createCrawler(api, config.crawler, db);
     crawler.start();
 });
