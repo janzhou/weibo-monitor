@@ -1,0 +1,28 @@
+{
+	"app": {
+		"key": "your app key",
+		"secret": "your app secret",
+		"callback_url": "your app callback url"
+	},
+	"http": {
+		"redirect_url": "redirect_url after auth",
+		"port": "80"
+	},
+	"crawler": {
+		"limit": 1,
+		"count": 100
+	},
+	"dict_dir": "/home/you/node_modules/nodejieba/dict/",
+	"mongodb": "mongodb://localhost:27017/weibo",
+    "mail": {
+        "from": "send@from.com",
+        "to":   "notify@to.com",
+        "host": "smtp.server.com",
+        "secureConnection": true,
+        "port": 465,
+        "auth": {
+            "user": "username",
+            "pass": "password"
+        }
+    }
+}
