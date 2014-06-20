@@ -22,4 +22,7 @@ MongoClient.connect(config.mongodb, function(err, db) {
 
     var crawler = require('./crawler.js').createCrawler(api, config.crawler, db);
     crawler.start();
+
+    var mail = require('./mail.js').createMail(config.mail);
+    mail.send(config.mail.to, 'Weibo Monitor Start', '<b>Hello world ✔</b>');
 });
