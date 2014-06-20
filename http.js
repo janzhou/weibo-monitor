@@ -37,18 +37,18 @@ function createServer(api, config, db) {
                 var email = url.parse(request.url, true).query.email;
                 var callback = url.parse(request.url, true).query.callback;
                 if(id) {
-                    if(email) {
-                        db.collection('user').findAndModify({'uuid':id}, [['uid', 1]], {$set:{'email':email}}, {new:true}, function(err, user) {
+                    if(email) { // set email
+                        db.collection('user').findAndModify({'uuid':id}, [['uid', 1]], {$set:{'setting':{'email':email}}}, {new:true}, function(err, user) {
                             if(err) throw err;
                             redirect(response, config.redirect_url);
                             return;
                         });
-                    } else {
+                    } else { // get email
                         db.collection('user').findOne({'uuid': id}, {'limit': 1}, function (err, user){
                             if(err) throw err;
                             if(user) {
-                                if( 'email' in user) {
-                                    var email = user.email;
+                                if( user.setting && 'email' in user.setting) {
+                                    var email = user.setting.email;
                                 } else {
                                     var email = 'place your email';
                                 }
