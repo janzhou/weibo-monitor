@@ -1,5 +1,5 @@
 var crawler = function (api, config, db) {
-    function crawlhome_timeline (user) {
+    function crawlhome_timeline (user, cursor) {
         if(!('auth'in user)){
             console.log(user);
             console.log('!auth in @' + user.screen_name);
@@ -53,14 +53,19 @@ var crawler = function (api, config, db) {
             }
             db.collection('user').findAndModify({'uid':user.uid}, [['uid', 1]], {$set:{'crawler':user.crawler}}, {new:true}, function(err, user) {
                 if(err) throw err;
+                cursor.nextObject(function(err, user){
+                    if(err) throw(err);
+                    if(user) crawlhome_timeline(user, cursor);
+                });
             });
         });
     }
 
     function crawlusers(){
-        db.collection('user').find().each(function(err, user){
+        var cursor  = db.collection('user').find();
+        cursor.nextObject(function(err, user){
             if(err) throw(err);
-            if(user) crawlhome_timeline(user);
+            if(user) crawlhome_timeline(user, cursor);
         });
     }
 
