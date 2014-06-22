@@ -1,27 +1,44 @@
 var nodemailer = require("nodemailer");
+var emailTemplates = require('email-templates');
 
 var mail = function (config) {
-    var transport = nodemailer.createTransport("SMTP", config);
 
-    this.send = function (to, title, content){
-        // setup e-mail data with unicode symbols
-        var mailOptions = {
-            from: config.from, // sender address
-            to: to, // list of receivers
-            subject: title, // Subject line
-            //text: "Hello world ✔", // plaintext body
-            html: content // html body
-        }
+    this.send = function (message){
 
-        // send mail with defined transport object
-        transport.sendMail(mailOptions, function(error, response){
-            if(error){
-                console.log(error);
-            }else{
-                console.log("Message sent: " + response.message);
+        emailTemplates('./templates', function(err, template) {
+
+            if (err) {
+                console.log(err);
+                return;
             }
 
-            //transport.close(); // shut down the connection pool, no more messages
+            // ## Send a single email
+
+            // Prepare nodemailer transport object
+            var transport = nodemailer.createTransport("SMTP", config);
+
+            // Send a single email
+            template('weibo', message, function(err, html, text) {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+                transport.sendMail({
+                    from: config.from,
+                    to: message.email,
+                    subject: message.subject,
+                    html: html,
+                    // generateTextFromHTML: true,
+                    text: text
+                }, function(err, responseStatus) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(responseStatus.message);
+                    }
+                    transport.close(); // shut down the connection pool, no more messages
+                });
+            });
         });
     };
 }
