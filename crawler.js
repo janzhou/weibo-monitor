@@ -32,9 +32,17 @@ var crawler = function (api, config, db) {
             });
 
             console.log('-------------------------------' + cnt);
+
             if(!('since_id' in user.crawler)) {
                 user.crawler.since_id   = weibos.since_id;
                 console.log('initial since_id: ' + user.crawler.since_id + ' @' + user.screen_name);
+            } else if(weibos.statuses.length == 0){
+                if('next_since_id' in user.crawler) {
+                    user.crawler.since_id = user.crawler.next_since_id;
+                    delete user.crawler.next_since_id;
+                    delete user.crawler.max_id;
+                }
+                console.log('since_id: ' + user.crawler.since_id + ' @' + user.screen_name);
             } else {
                 if(!('next_since_id' in user.crawler)) {
                     user.crawler.next_since_id   = weibos.since_id;
