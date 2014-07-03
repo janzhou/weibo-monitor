@@ -22,14 +22,16 @@ var crawler = function (api, config, db) {
             var collection = db.collection('status');
             var cnt = 0;
 
-            weibos.statuses.forEach(function ( weibo, index ) {
-                if (weibo.id > user.crawler.since_id ) {
-                    cnt++;
-                    collection.insert(weibo, function (err) {
-                        if(err) throw err;
-                    });
-                }
-            });
+            if('statuses' in weibos) {
+                weibos.statuses.forEach(function ( weibo, index ) {
+                    if (weibo.id > user.crawler.since_id ) {
+                        cnt++;
+                        collection.insert(weibo, function (err) {
+                            if(err) throw err;
+                        });
+                    }
+                });
+            }
 
             console.log('-------------------------------' + cnt);
 
