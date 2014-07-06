@@ -1,1 +1,9 @@
-<h1>Hi there <%= name.first %> <%= name.last %></h1>
+<h1>Weibo-monitor @<%= user.name %></h1>
+<ul>
+    <% for(var i=0; i<status.length; i++) { %>
+        <li>
+            <a href='http://weibo.com/<%= status[i].user.id %>'>@<%= status[i].user.name %></a>:
+            <%= status[i].text %>
+        </li>
+    <% } %>
+</ul>

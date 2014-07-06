@@ -24,5 +24,6 @@ MongoClient.connect(config.mongodb, function(err, db) {
     crawler.start();
 
     var mail = require('./mail.js').createMail(config.mail);
-    mail.send({'email':'i@janzhou.org', 'subject':'Hello!', 'name':{ 'first':'Jian', 'last':'Zhou' }});
+    var analysis = require('./analysis.js').createAnalysis(config.analysis, db, mail);
+    analysis.start();
 });
