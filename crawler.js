@@ -18,6 +18,10 @@ var crawler = function (api, config, db) {
                 console.log(err + ' @'+user.screen_name + ' ' + user.auth.access_token);
                 return;
             }
+            if(!weibos) {
+                console.log('no weibos in @'+user.screen_name + ' ' + user.auth.access_token);
+                return;
+            }
 
             var collection = db.collection('status');
             var cnt = 0;
