@@ -1,0 +1,26 @@
+{
+    "name"          : "weibo-monitor",
+    "version"       : "0.0.0",
+    "description"   : "Weibo Monitor",
+    "license"       : "AGPL",
+    "author": {
+        "name"      : "Jian Zhou",
+        "email"     : "i@janzhou.org"
+    },
+    "repository": {
+        "type"      : "git",
+        "url"       : "https://bitbucket.org/janzhou/weibo-monitor.git"
+    },
+    "bugs": {
+        "url"       : "https://bitbucket.org/janzhou/weibo-monitor/issues"
+    },
+    "dependencies" : {
+        "request"   : "2.36.0",
+        "urlencode" : "0.2.0",
+        "nodejieba" : "0.1.4",
+        "mongodb"   : "1.4.0",
+        "node-uuid" : "1.4.1",
+        "nodemailer": "0.7.0",
+        "email-templates": "1.0.0"
+    }
+}
