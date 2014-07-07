@@ -1,44 +1,29 @@
-var nodemailer = require("nodemailer");
-var emailTemplates = require('email-templates');
-
 var mail = function (config) {
+    var nodemailer = require("nodemailer");
+    var ejs = require('ejs')
+        , fs = require('fs')
+        , html = fs.readFileSync(__dirname + '/templates/'+config.theme+'/html.ejs', 'utf8')
+        , text = fs.readFileSync(__dirname + '/templates/'+config.theme+'/text.ejs', 'utf8');
 
     this.send = function (message){
+        // Prepare nodemailer transport object
+        var transport = nodemailer.createTransport("SMTP", config);
 
-        emailTemplates('./templates', function(err, template) {
-
+        // Send a single email
+        transport.sendMail({
+            from: config.from,
+            to: message.email,
+            subject: message.subject,
+            html: ejs.render(html, message),
+            // generateTextFromHTML: true,
+            text: ejs.render(text, message)
+        }, function(err, responseStatus) {
             if (err) {
                 console.log(err);
-                return;
+            } else {
+                console.log(responseStatus.message);
             }
-
-            // ## Send a single email
-
-            // Prepare nodemailer transport object
-            var transport = nodemailer.createTransport("SMTP", config);
-
-            // Send a single email
-            template('weibo', message, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                    return;
-                }
-                transport.sendMail({
-                    from: config.from,
-                    to: message.email,
-                    subject: message.subject,
-                    html: html,
-                    // generateTextFromHTML: true,
-                    text: text
-                }, function(err, responseStatus) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        console.log(responseStatus.message);
-                    }
-                    transport.close(); // shut down the connection pool, no more messages
-                });
-            });
+            transport.close(); // shut down the connection pool, no more messages
         });
     };
 }

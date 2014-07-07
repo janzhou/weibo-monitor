@@ -21,6 +21,6 @@
         "mongodb"   : "1.4.0",
         "node-uuid" : "1.4.1",
         "nodemailer": "0.7.0",
-        "email-templates": "1.0.0"
+        "ejs"       : "1.0.0"
     }
 }
