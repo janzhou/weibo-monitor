@@ -15,7 +15,7 @@
         "url"       : "https://bitbucket.org/janzhou/weibo-monitor/issues"
     },
     "dependencies" : {
-        "request"   : "2.36.0",
+        "request"   : "2.88.2",
         "urlencode" : "0.2.0",
         "nodejieba" : "0.1.4",
         "mongodb"   : "1.4.0",
