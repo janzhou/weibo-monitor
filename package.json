@@ -19,7 +19,7 @@
         "urlencode" : "0.2.0",
         "nodejieba" : "0.1.4",
         "mongodb"   : "1.4.0",
-        "node-uuid" : "1.4.1",
+        "node-uuid" : "1.4.8",
         "nodemailer": "0.7.0",
         "ejs"       : "2.5.5"
     }
